@@ -1,0 +1,22 @@
+{% import "macros.html" as macros %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/css/main.css">
+
+        <title>{% block title %}{{ title }}{% endblock title %}</title>
+    </head>
+
+    <body>
+    {% block content %}
+        <h1>Welcome from {{ title }}</h1>
+    {% endblock content %}
+    <footer>
+        {{ macros.light_or_dark_mode() }}
+    </footer>
+    </body>
+</html>

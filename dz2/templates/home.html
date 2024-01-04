@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+    {% block content %}
+    <header>
+        <h1>Ласкаво просимо на нашу сторінку!</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('contacts') }}">Контакти</a></li>
+            <li><a href="{{ url_for('about') }}">Про нас</a></li>
+        </ul>
+    </nav>
+{% endblock content %}

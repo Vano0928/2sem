@@ -1,0 +1,9 @@
+{% macro light_or_dark_mode(dark_mode_text='Switch to Dark Mode', light_mode_text='Switch to Light Mode') %}
+  {% if request.args.get('mode') == 'dark' %}
+    <a href="{{ request.path }}">{{ light_mode_text }}</a>
+    <link rel="stylesheet" href="/static/css/dark.css">
+
+  {% else %}
+    <a href="{{ request.path }}?mode=dark">{{ dark_mode_text }}</a>
+  {% endif %}
+{% endmacro %}
