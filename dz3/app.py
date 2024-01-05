@@ -2,7 +2,7 @@ import sqlite3
 
 from flask import Flask, g, render_template, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 
 DATABASE = 'test_db.db'
@@ -23,10 +23,31 @@ def get_db():
 
 def create_db():
     cr = sqlite3.connect(DATABASE)
+
+    #participiants table
     cr.execute("""
         CREATE TABLE IF NOT EXISTS participants
-            (name VARCHAR(128), email VARCHAR(128), city INT, order_name VARCHAR(128), phone VARCHAR(32)) 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(128),
+            email VARCHAR(128),
+            city INT,
+            order_name VARCHAR(128), phone VARCHAR(32)) 
     """)
+
+    #towns table
+    cr.execute("""
+    CREATE TABLE IF NOT EXISTS cities
+    (id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(20))
+    """)
+
+
+    # for city in CITIES.values():
+    #
+    #     cr.execute("""
+    #     INSERT INTO cities(name) VALUES(?)""", (city,))
+    #
+    #     cr.commit()
 
 
 @app.teardown_appcontext
@@ -51,6 +72,7 @@ def join():
         city = request.form.get("city")
         phone = request.form.get("phone")
         order = request.form.get("order")
+
         cr = get_db()
         cr.execute("""
             INSERT INTO participants (name, email, city, phone, order_name) VALUES (?,?,?,?,?)
@@ -59,15 +81,22 @@ def join():
         return render_template("index.html")
 
     else:
-        return render_template("join.html", cities=CITIES)
+        cr = get_db().cursor()
+        cr.execute("""SELECT * FROM cities""")
+
+        cities_data = cr.fetchall()
+
+        return render_template("join.html", cities=cities_data)
 
 
 @app.route('/participants/')
 def participants():
     cr = get_db().cursor()
-    cr.execute("SELECT * FROM participants")
+    cr.execute("""SELECT participants.name, participants.email, cities.name, participants.phone, participants.order_name FROM participants 
+    LEFT JOIN cities ON participants.city = cities.id""")
+
     data = cr.fetchall()
-    return render_template("participants.html", participants=data, cities=CITIES)
+    return render_template("participants.html", participants=data)
 
 
 if __name__ == "__main__":

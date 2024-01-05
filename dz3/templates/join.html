@@ -9,8 +9,8 @@
     <label for="city">Enter City</label>
     <select id="city" name="city">
         <option value="">--Your City--</option>
-        {% for key, value in cities.items() %}
-            <option value="{{key}}">{{ value }}</option>
+        {% for city in cities %}
+            <option value="{{city[0]}}">{{ city[1] }}</option>
         {% endfor %}
     </select><br/>
     <label for="phone">Enter Phone</label>
